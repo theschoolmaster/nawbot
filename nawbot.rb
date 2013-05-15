@@ -1,4 +1,4 @@
-#!/usr/local/rvm/rubies/ruby-1.9.2-p320/bin/ruby
+#!/usr/local/rvm/rubies/default/bin/ruby
 # encoding: UTF-8
 
 require 'cinch'
@@ -6,7 +6,9 @@ require 'open-uri'
 require 'nokogiri'
 require 'cgi'
 require 'httparty'
+require 'xbox_leaders'
 require 'google/api_client'
+require "cinch/formatting"
 require 'cinch/plugins/last_seen'
 require 'cinch/plugins/downforeveryone'
 require 'cinch/plugins/urbandictionary'
@@ -25,18 +27,18 @@ class Preclick
           resp = self.class.get(url) 
           doc = Nokogiri::HTML(resp.body)
           title = doc.title.strip.gsub("\n      - YouTube",'')
-          m.reply "Youtube: #{title}"
+          m.reply Cinch::Formatting.format(:blue, "Youtube: #{title}")
         when /imgur\.com/
           resp = self.class.get(url) 
           doc = Nokogiri::HTML(resp.body)
           title = doc.title.strip.gsub(" - Imgur",'')
-          m.reply "Imgur: #{title}"
+          m.reply Cinch::Formatting.format(:blue, "Imgur: #{title}")
         else
           resp = self.class.get(url) 
           doc = Nokogiri::HTML(resp.body)
           title = doc.title.strip
           uri = URI.parse(url)
-          m.reply "#{uri.host}: #{title}"
+          m.reply Cinch::Formatting.format(:blue, "#{uri.host}: #{title}")
       end
     end
      
@@ -50,17 +52,15 @@ class XboxLive
   match /^!live (.+)/, use_prefix: false
 
   def xboxlive(gamertag)
-    url = "http://www.xboxleaders.com/api/profile/#{URI.escape(gamertag.strip)}.json"
-    resp = self.class.get(url)
-    if resp.parsed_response['Stat'] == 'ok'
-      status = resp.parsed_response['Data']['OnlineStatus'] rescue nil
-      unless status.nil?
-        "#{gamertag}: #{status}"
-      else
-        "#{gamertag}: No status found."
-      end
-    else
+    api = XboxLeaders::Api.new
+    resp = api.fetch_profile("#{URI.escape(gamertag.strip)}")
+
+    status = resp.try(:[], 'OnlineStatus') rescue nil
+
+    if status.nil?
       "#{gamertag}: Probably jerking it..."
+    else
+        "#{gamertag}: #{status}"
     end
   end
 
@@ -194,7 +194,7 @@ class FlipShit
 
 end
 
-class Google
+class TehGoog
   include Cinch::Plugin
 
   match /^!google (.+)/, use_prefix: false
@@ -223,7 +223,7 @@ nawbot = Cinch::Bot.new do
     c.server = "irc.freenode.org"
     c.channels = ["#reddit-naw","#nawbot-test"]
     #c.channels = ["#nawbot-test"]
-    c.plugins.plugins = [Preclick, XboxLive, FlipShit, Google, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen]
+    c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen]
   end
 
   on :message, "hello" do |m|
