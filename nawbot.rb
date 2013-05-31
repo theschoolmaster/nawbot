@@ -216,6 +216,120 @@ class TehGoog
   end
 end
 
+class Hitch
+  include Cinch::Plugin
+
+  match /^!hitch (.+)/, use_prefix: false
+
+  slang = ['Tosser',
+'Cock-up',
+'Bloody',
+'Give You A Bell',
+'Blimey!',
+'Wanker',
+'Gutted',
+'Bespoke',
+'Chuffed',
+'Fancy',
+'Sod Off',
+'Lost the Plot',
+'Fortnight',
+'Sorted',
+'Hoover',
+'Kip',
+'Bee’s Knees',
+'Know Your Onions',
+'Dodgy',
+'Wonky',
+'Wicked',
+'Whinge',
+'Tad',
+'Tenner',
+'Fiver',
+'Skive',
+'Toff',
+'Punter',
+'Scouser',
+'Quid',
+'Taking the Piss',
+'Loo',
+'Nicked',
+'Nutter',
+'Knackered',
+'Gobsmacked',
+'Dog’s Bollocks',
+'Chap',
+'Bugger',
+'Bog Roll',
+'Bob’s Your Uncle',
+'Anti-Clockwise',
+'C of E',
+'Pants',
+'Throw a Spanner in the Works',
+'Zed',
+'Absobloodylootely',
+'Nosh',
+'One Off',
+'Shambles',
+'Arse-over-tit',
+'Brilliant!',
+'Dog’s Dinner',
+'Up for it',
+'On the Pull',
+'Made Redundant',
+'Easy Peasy',
+'See a Man About a Dog',
+'Up the Duff',
+'DIY',
+'Chat Up',
+'Fit',
+'Arse',
+'Strawberry Creams',
+'Shag',
+'Gentleman Sausage',
+'Twigs & Berries',
+'Fanny',
+'Bollocks',
+'Ponce',
+'Don’t Get Your Knickers in a Twist',
+'The Telly',
+'Bangers',
+'Chips',
+'Daft Cow',
+'Do',
+'Uni',
+'Starkers',
+'Smeg',
+'Bits ‘n Bobs',
+'Anorak',
+'Shambles',
+'I’m Off to Bedfordshire',
+'Her Majesty’s Pleasure',
+'Horses for Courses',
+'John Thomas',
+'Plastered',
+'Meat and Two Veg',
+'Knob Head',
+'Knob',
+'Chav',
+'It`s monkeys outside',
+'Stag Night',
+'Ace',
+'Plonker',
+'Dobber',
+'BellEnd',
+'Blighty',
+'Rubbish']
+
+  def hith_itc()
+    "#{slang[rand(slang.length)}!"
+  end
+
+  def execute(m, query)
+    m.reply(hitch_it())
+  end
+end
+
 nawbot = Cinch::Bot.new do
   configure do |c|
     c.nick = "nawbot"
@@ -246,5 +360,6 @@ nawbot = Cinch::Bot.new do
     end
   end
 end
+
 
 nawbot.start
