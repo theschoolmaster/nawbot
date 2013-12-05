@@ -219,9 +219,11 @@ end
 class Hitch
   include Cinch::Plugin
 
-  match /^!hitch(.+)/, use_prefix: false
+  match /hitch/
 
-  @@slang = ['Tosser',
+  def initialize(*args)
+    super
+    @hitch = ['Tosser',
             'Cock-up',
             'Bloody',
             'Give You A Bell',
@@ -320,13 +322,33 @@ class Hitch
             'BellEnd',
             'Blighty',
             'Rubbish']
-
-  def hitch_it()
-    "#{@@slang[rand(@@slang.length)]}!"
   end
 
-  def execute(m, query)
-    m.reply(hitch_it)
+  def execute(m)
+    m.reply(@hitch.sample)
+  end
+end
+
+class TextLogan
+  include Cinch::Plugin
+
+  match /text_logan|text logan/
+
+  def initialize(*args)
+    super
+    @texts = ['Are you coming? My battery ubisnabkit to do above the tondo. And',
+            'Fish',
+            'Can your poco me up',
+            'Alol-zgah hayha',
+            'Umm. I might need a rode ho lpl',
+            'Hi',
+            'U Jane fps for toy',
+            'Gosh',
+            'My battery us dying']
+  end
+
+  def execute(m)
+    m.reply(@texts.sample)
   end
 end
 
@@ -376,7 +398,7 @@ nawbot = Cinch::Bot.new do
     c.server = "irc.freenode.org"
     c.channels = ["#reddit-naw","#nawbot-test"]
     #c.channels = ["#nawbot-test"]
-    c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Hitch, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen, EightBall]
+    c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Hitch, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen, EightBall, TextLogan]
   end
 
   on :message, "hello" do |m|
