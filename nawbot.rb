@@ -45,6 +45,7 @@ class Preclick
   end
 end
 
+
 class XboxLive
   include Cinch::Plugin
   include HTTParty
@@ -55,12 +56,12 @@ class XboxLive
     api = XboxLeaders::Api.new
     resp = api.fetch_profile("#{URI.escape(gamertag.strip)}")
 
-    status = resp.try(:[], 'OnlineStatus') rescue nil
+    is_online = resp["online"]
 
-    if status.nil?
+    unless is_online
       "#{gamertag}: Probably jerking it..."
     else
-        "#{gamertag}: #{status}"
+        "#{gamertag}: #{resp["presence"]}"
     end
   end
 
@@ -69,6 +70,7 @@ class XboxLive
   end
   
 end
+
 
 class WuName
   include Cinch::Plugin
