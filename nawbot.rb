@@ -49,28 +49,34 @@ end
 class XboxLive
   include Cinch::Plugin
   include HTTParty
-  
+
   match /^!live (.+)/, use_prefix: false
 
   def xboxlive(gamertag)
     api = XboxLeaders::Api.new
-    resp = api.fetch_profile("#{URI.escape(gamertag.strip)}")
 
-    is_online = resp["online"]
+    begin
+      
+      resp = api.fetch_profile("#{URI.escape(gamertag.strip)}")
+      is_online = resp["online"]
 
-    unless is_online
-      "#{gamertag}: Probably jerking it..."
-    else
+      unless is_online
+        "#{gamertag} offline: #{resp["presence"]}"
+      else
         "#{gamertag}: #{resp["presence"]}"
+      end
+
+    rescue
+      "#{gamertag}: Probably jerking it..."
     end
+
   end
 
   def execute(m, gamertag)
     m.reply CGI.unescapeHTML xboxlive(gamertag).chars.select{|i| i.valid_encoding?}.join
   end
-  
-end
 
+end
 
 class WuName
   include Cinch::Plugin
@@ -398,7 +404,7 @@ nawbot = Cinch::Bot.new do
     c.nick = "nawbot"
     c.password = "nawbotpass*123"
     c.server = "irc.freenode.org"
-    c.channels = ["#reddit-naw","#nawbot-test"]
+    c.channels = ["#nawbot-test", "#reddit-naw"]
     #c.channels = ["#nawbot-test"]
     c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Hitch, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen, EightBall, TextLogan]
   end
