@@ -59,12 +59,7 @@ class XboxLive
       
       resp = api.fetch_profile("#{URI.escape(gamertag.strip)}")
       is_online = resp["online"]
-
-      unless is_online
-        "#{gamertag} offline: #{resp["presence"]}"
-      else
-        "#{gamertag}: #{resp["presence"]}"
-      end
+      is_online ? "#{gamertag}: #{resp["presence"]}" : "#{gamertag} offline: #{resp["presence"]}"
 
     rescue
       "#{gamertag}: Probably jerking it..."
@@ -401,7 +396,7 @@ end
 
 nawbot = Cinch::Bot.new do
   configure do |c|
-    c.nick = "nawbot"
+    c.nick = "nawbot_imposter"
     c.password = "nawbotpass*123"
     c.server = "irc.freenode.org"
     c.channels = ["#nawbot-test", "#reddit-naw"]
