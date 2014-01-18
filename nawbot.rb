@@ -396,7 +396,7 @@ end
 
 nawbot = Cinch::Bot.new do
   configure do |c|
-    c.nick = "nawbot_imposter"
+    c.nick = "nawbot"
     c.password = "nawbotpass*123"
     c.server = "irc.freenode.org"
     c.channels = ["#nawbot-test", "#reddit-naw"]
