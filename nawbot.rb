@@ -78,22 +78,17 @@ class WuName
   include HTTParty
   
   match /^!wutang (.+)/, use_prefix: false
-
-  def wu_name(arg)
+  
+  def wu_name(string)
     url = "http://www.mess.be/inickgenwuname.php"
-    resp = self.class.post(url,
-            :body => {
-              :realname => string,
-              :Submit => 'Enter the Wu-Tang'
-            }
-    )
-    the_worst_page_ever = Nokogiri::HTML(resp.body)
-    
-    "#{arg}: from this day forward you will also be known as #{new_wu_name}"
+    response = HTTParty.post(  url, body: { realname: string, Submut: 'Enter the Wu-Tang' }   )
+    the_worst_page_ever = Nokogiri::HTML(response.body)
+    new_wu_name = the_worst_page_ever.search('font')[1].inner_text.gsub!(/\n/,'')
+    "#{string}, from this day forward you will also be known as #{new_wu_name}"
   end
-
-  def execute(m, arg)
-    m.reply CGI.unescapeHTML wu_name(arg)
+ 
+  def execute(m, string)
+    m.reply wu_name(string)
   end
   
 end
@@ -399,9 +394,9 @@ nawbot = Cinch::Bot.new do
     c.nick = "nawbot"
     c.password = "nawbotpass*123"
     c.server = "irc.freenode.org"
-    c.channels = ["#nawbot-test", "#reddit-naw"]
+    c.channels = ["#nawbot-test2", "#reddit-naw"]
     #c.channels = ["#nawbot-test"]
-    c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Hitch, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen, EightBall, TextLogan]
+    c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Hitch, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen, EightBall, TextLogan, WuName]
   end
 
   on :message, "hello" do |m|
