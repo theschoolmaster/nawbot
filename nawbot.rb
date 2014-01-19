@@ -49,50 +49,46 @@ end
 class XboxLive
   include Cinch::Plugin
   include HTTParty
-  
+
   match /^!live (.+)/, use_prefix: false
 
   def xboxlive(gamertag)
     api = XboxLeaders::Api.new
-    resp = api.fetch_profile("#{URI.escape(gamertag.strip)}")
 
-    is_online = resp["online"]
+    begin
+      
+      resp = api.fetch_profile("#{URI.escape(gamertag.strip)}")
+      is_online = resp["online"]
+      is_online ? "#{gamertag}: #{resp["presence"]}" : "#{gamertag} offline: #{resp["presence"]}"
 
-    unless is_online
+    rescue
       "#{gamertag}: Probably jerking it..."
-    else
-        "#{gamertag}: #{resp["presence"]}"
     end
+
   end
 
   def execute(m, gamertag)
     m.reply CGI.unescapeHTML xboxlive(gamertag).chars.select{|i| i.valid_encoding?}.join
   end
-  
-end
 
+end
 
 class WuName
   include Cinch::Plugin
   include HTTParty
   
   match /^!wutang (.+)/, use_prefix: false
-
-  def wu_name(arg)
+  
+  def wu_name(string)
     url = "http://www.mess.be/inickgenwuname.php"
-    resp = self.class.post(url,
-            :body => {
-              :realname => string,
-              :Submit => 'Enter the Wu-Tang'
-            }
-    )
-    the_worst_page_ever = Nokogiri::HTML(resp.body)
-    
-    "#{arg}: from this day forward you will also be known as #{new_wu_name}"
+    response = HTTParty.post(  url, body: { realname: string, Submut: 'Enter the Wu-Tang' }   )
+    the_worst_page_ever = Nokogiri::HTML(response.body)
+    new_wu_name = the_worst_page_ever.search('font')[1].inner_text.gsub!(/\n/,'')
+    "#{string}, from this day forward you will also be known as #{new_wu_name}"
   end
-
-  def execute(m, arg)
-    m.reply CGI.unescapeHTML wu_name(arg)
+ 
+  def execute(m, string)
+    m.reply wu_name(string)
   end
   
 end
@@ -398,9 +394,9 @@ nawbot = Cinch::Bot.new do
     c.nick = "nawbot"
     c.password = "nawbotpass*123"
     c.server = "irc.freenode.org"
-    c.channels = ["#reddit-naw","#nawbot-test"]
+    c.channels = ["#nawbot-test2", "#reddit-naw"]
     #c.channels = ["#nawbot-test"]
-    c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Hitch, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen, EightBall, TextLogan]
+    c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Hitch, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen, EightBall, TextLogan, WuName]
   end
 
   on :message, "hello" do |m|
