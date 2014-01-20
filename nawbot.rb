@@ -45,6 +45,29 @@ class Preclick
   end
 end
 
+class XboxRally
+  include Cinch::Plugin
+  include HTTParty
+
+  match /!rally/, use_prefix: false
+
+  def rally(name)
+    api = XboxLeaders::Api.new
+    begin
+      resp = api.fetch_profile("#{URI.escape(name.strip)}")
+      is_online = resp["online"]
+      is_online ? "#{name}: #{resp["presence"]}" : "#{name} is offline: #{resp["presence"]}"
+    rescue
+      "#{name}: Probably jerking it..."
+    end
+  end
+
+  def execute(m)
+    names = ["audibleblink", "theschoolmaster", "caligirlstuck", "bftp", "oh hai loganz", "thingsomething", "mikesrt4"]
+    names.each { |gt| m.reply rally(gt) }
+  end
+
+end
 
 class XboxLive
   include Cinch::Plugin
@@ -394,9 +417,9 @@ nawbot = Cinch::Bot.new do
     c.nick = "nawbot"
     c.password = "nawbotpass*123"
     c.server = "irc.freenode.org"
-    c.channels = ["#nawbot-test2", "#reddit-naw"]
+    c.channels = ["#nawbot-test", "#reddit-naw"]
     #c.channels = ["#nawbot-test"]
-    c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Hitch, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen, EightBall, TextLogan, WuName]
+    c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Hitch, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen, EightBall, TextLogan, WuName, XboxRally]
   end
 
   on :message, "hello" do |m|
