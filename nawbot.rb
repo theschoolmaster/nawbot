@@ -80,7 +80,7 @@ class XboxLive
 
     begin
       
-      resp = api.fetch_profile("#{URI.escape(gamertag.strip)}")
+      resp = api.fetch_profile("#{URI.unescape(gamertag.strip)}")
       is_online = resp["online"]
       is_online ? "#{gamertag}: #{resp["presence"]}" : "#{gamertag} offline: #{resp["presence"]}"
 
