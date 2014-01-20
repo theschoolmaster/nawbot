@@ -21,7 +21,7 @@ class Preclick
   listen_to :channel  
 
   def listen(m)
-    URI.extract(m.message, "http") do |url|
+    URI.extract(m.message, ["https", "http"]) do |url|
       case url
         when /youtube\.com/
           resp = self.class.get(url) 
@@ -45,6 +45,29 @@ class Preclick
   end
 end
 
+class XboxRally
+  include Cinch::Plugin
+  include HTTParty
+
+  match /!rally/, use_prefix: false
+
+  def rally(name)
+    api = XboxLeaders::Api.new
+    begin
+      resp = api.fetch_profile("#{URI.unescape(name.strip)}")
+      is_online = resp["online"]
+      is_online ? "#{name}: #{resp["presence"]}" : "#{name} is offline: #{resp["presence"]}"
+    rescue
+      "#{name}: Probably jerking it..."
+    end
+  end
+
+  def execute(m)
+    names = ["audibleblink", "theschoolmaster", "bftp", "oh hai loganz", "thingsomething", "mikesrt4"]
+    names.each { |gt| m.reply rally(gt) }
+  end
+
+end
 
 class XboxLive
   include Cinch::Plugin
@@ -57,7 +80,7 @@ class XboxLive
 
     begin
       
-      resp = api.fetch_profile("#{URI.escape(gamertag.strip)}")
+      resp = api.fetch_profile("#{URI.unescape(gamertag.strip)}")
       is_online = resp["online"]
       is_online ? "#{gamertag}: #{resp["presence"]}" : "#{gamertag} offline: #{resp["presence"]}"
 
@@ -394,9 +417,9 @@ nawbot = Cinch::Bot.new do
     c.nick = "nawbot"
     c.password = "nawbotpass*123"
     c.server = "irc.freenode.org"
-    c.channels = ["#nawbot-test2", "#reddit-naw"]
+    c.channels = ["#nawbot-test", "#reddit-naw"]
     #c.channels = ["#nawbot-test"]
-    c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Hitch, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen, EightBall, TextLogan, WuName]
+    c.plugins.plugins = [Preclick, XboxLive, FlipShit, TehGoog, Hitch, Cinch::Plugins::Reddit, Cinch::Plugins::DownForEveryone, Cinch::Plugins::UrbanDictionary, Cinch::Plugins::LastSeen, EightBall, TextLogan, WuName, XboxRally]
   end
 
   on :message, "hello" do |m|
