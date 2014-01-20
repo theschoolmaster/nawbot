@@ -104,8 +104,6 @@ GEM
     unf_ext (0.0.6)
     uuidtools (2.1.4)
     webrobots (0.1.1)
-    xbox_leaders (1.0.2)
-      httparty
 
 PLATFORMS
   ruby
@@ -119,4 +117,3 @@ DEPENDENCIES
   google-api-client
   httparty
   nokogiri
-  xbox_leaders

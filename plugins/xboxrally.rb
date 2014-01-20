@@ -6,20 +6,15 @@ module Nawbot
 
       match /!rally/, use_prefix: false
 
-      def rally(name)
-        api = XboxLeaders::Api.new
-        begin
-          resp = api.fetch_profile("#{URI.unescape(name.strip)}")
-          is_online = resp["online"]
-          is_online ? "#{name}: #{resp["presence"]}" : "#{name} is offline: #{resp["presence"]}"
-        rescue
-          "#{name}: Probably jerking it..."
-        end
-      end
-
       def execute(m)
-        names = ["audibleblink", "theschoolmaster", "bftp", "oh hai loganz", "thingsomething", "mikesrt4"]
-        names.each { |gt| m.reply rally(gt) }
+        reply = ''
+        gamertags = ["audibleblink", "theschoolmaster", "bftp", "oh hai loganz", "thingsomething", "mikesrt4"]
+        gamertags.each do |gamertag|
+          xbs = XboxStatus.new(gamertag)
+          reply += xbs.pretty_irc_status
+          reply += "\n"
+        end
+        m.reply reply
       end
 
     end
