@@ -54,7 +54,7 @@ class XboxRally
   def rally(name)
     api = XboxLeaders::Api.new
     begin
-      resp = api.fetch_profile("#{URI.escape(name.strip)}")
+      resp = api.fetch_profile("#{URI.unescape(name.strip)}")
       is_online = resp["online"]
       is_online ? "#{name}: #{resp["presence"]}" : "#{name} is offline: #{resp["presence"]}"
     rescue
