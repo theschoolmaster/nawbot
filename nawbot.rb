@@ -21,7 +21,7 @@ class Preclick
   listen_to :channel  
 
   def listen(m)
-    URI.extract(m.message, "http") do |url|
+    URI.extract(m.message, ["https", "http"]) do |url|
       case url
         when /youtube\.com/
           resp = self.class.get(url) 
