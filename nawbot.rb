@@ -63,7 +63,7 @@ class XboxRally
   end
 
   def execute(m)
-    names = ["audibleblink", "theschoolmaster", "caligirlstuck", "bftp", "oh hai loganz", "thingsomething", "mikesrt4"]
+    names = ["audibleblink", "theschoolmaster", "bftp", "oh hai loganz", "thingsomething", "mikesrt4"]
     names.each { |gt| m.reply rally(gt) }
   end
 
