@@ -20,13 +20,20 @@ Dir.glob(File.expand_path("./plugins/*.rb")).each do |file|
 end
 
 
+TEST = ARGV[0] == '--test'
+
 nawbot = Cinch::Bot.new do
   configure do |c|
-    c.nick = "nawbot-test"
-    c.password = "nawbotpass*123"
+    if TEST
+      c.nick = "nawbot-test"
+      c.channels = ["#nawbot-test"]
+    else
+      c.nick = "nawbot"
+      c.password = "nawbotpass*123"
+      c.channels = ["#reddit-naw"]
+    end
+
     c.server = "irc.freenode.org"
-    #c.channels = ["#nawbot-test2", "#reddit-naw"]
-    c.channels = ["#nawbot-test"]
     c.plugins.plugins = [
                           Cinch::Plugins::Reddit,
                           Cinch::Plugins::DownForEveryone,
@@ -34,6 +41,7 @@ nawbot = Cinch::Bot.new do
                           Cinch::Plugins::LastSeen,
                           Nawbot::Plugins::Preclick,
                           Nawbot::Plugins::XboxLive,
+                          Nawbot::Plugins::XboxRally,
                           Nawbot::Plugins::FlipShit,
                           Nawbot::Plugins::TehGoog,
                           Nawbot::Plugins::Hitch,
