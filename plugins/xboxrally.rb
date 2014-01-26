@@ -8,7 +8,7 @@ module Nawbot
 
       def execute(m)
         reply = ''
-        gamertags = ["audibleblink", "theschoolmaster", "bftp", "oh hai loganz", "thingsomething", "mikesrt4"]
+        gamertags = ["audibleblink", "theschoolmaster", "andrewigo", "oh hai loganz", "thingsomething", "mikesrt4"]
         gamertags.each do |gamertag|
           xbs = XboxStatus.new(gamertag)
           reply += xbs.pretty_irc_status
