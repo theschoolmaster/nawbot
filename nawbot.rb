@@ -47,7 +47,8 @@ nawbot = Cinch::Bot.new do
                           Nawbot::Plugins::Hitch,
                           Nawbot::Plugins::EightBall,
                           Nawbot::Plugins::TextLogan,
-                          Nawbot::Plugins::WuName
+                          Nawbot::Plugins::WuName,
+                          Nawbot::Plugins::StartupIdea
                         ]
   end
 
