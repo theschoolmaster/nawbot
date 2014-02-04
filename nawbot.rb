@@ -11,7 +11,6 @@ require 'google/api_client'
 require "cinch/formatting"
 require 'cinch/plugins/last_seen'
 require 'cinch/plugins/downforeveryone'
-require 'cinch/plugins/urbandictionary'
 require 'cinch/plugins/reddit'
 
 # include local plugins
@@ -37,7 +36,6 @@ nawbot = Cinch::Bot.new do
     c.plugins.plugins = [
                           Cinch::Plugins::Reddit,
                           Cinch::Plugins::DownForEveryone,
-                          Cinch::Plugins::UrbanDictionary,
                           Cinch::Plugins::LastSeen,
                           Nawbot::Plugins::Preclick,
                           Nawbot::Plugins::XboxLive,
@@ -48,7 +46,8 @@ nawbot = Cinch::Bot.new do
                           Nawbot::Plugins::EightBall,
                           Nawbot::Plugins::TextLogan,
                           Nawbot::Plugins::WuName,
-                          Nawbot::Plugins::StartupIdea
+                          Nawbot::Plugins::StartupIdea,
+                          Nawbot::Plugins::UrbanDictionary			  
                         ]
   end
 
