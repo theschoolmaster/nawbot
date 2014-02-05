@@ -14,7 +14,7 @@ module Nawbot
       private
       def search(query)
         response = self.class.get '/v0/define', query: { term: query }
-        response['list'][0]['definition'].strip.gsub(/\r\n/, ' ')
+        response['list'][0]['definition'].gsub(/\r\n/, ' ')
       end
 
     end
