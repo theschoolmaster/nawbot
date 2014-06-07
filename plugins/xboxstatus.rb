@@ -1,25 +1,23 @@
-require 'xbox_leaders'
 require "cinch/formatting"
 require 'cgi'
 
 class XboxStatus
   include HTTParty
-  format :json
-  base_uri 'https://www.xboxleaders.com/api/'
+  base_uri 'https://live.xbox.com/en-US/Profile'
 
   attr_accessor :status
 
   def initialize(gamertag)
-    response = self.class.get '/profile.json', query: { gamertag: gamertag }
+    response = self.class.get '/', query: { gamertag: gamertag }
     @gamertag = gamertag
-    @status = response.parsed_response["data"]
+    @status = Nokogiri.parse(response).css('.presence').text
   end
 
   def presence
-    if @status['presence'].nil?
+    if @status.nil?
       'Unknown Error'
     else
-      CGI.unescapeHTML( @status['presence'] )
+      CGI.unescapeHTML( @status )
     end
   end
 
